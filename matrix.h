@@ -17,14 +17,14 @@ namespace matrix
 		while (true)
 		{
 			std::cin >> x;
-			if (std::cin.fail())
+			if (std::cin.eof())
+				return -1;
+			else if (std::cin.fail())
 			{
 				std::cin.clear();
 				std::cin.ignore(32767, '\n');
 				std::cout << "Input error. Try again\n";
-			}
-			else if (std::cin.eof())
-				return -1;
+			}			
 			else
 				return 0;
 		}
