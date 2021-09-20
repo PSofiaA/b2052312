@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <Hypocycloid.h>
+//#include <Hypocycloid.h>
 const double error = 0.001; //значение ошибки в соответствии с рекомендацией Ларисы Ивановны
 TEST(Constructor, SimpleConstructor)
 {
@@ -11,94 +12,89 @@ TEST(Constructor, SimpleConstructor)
 
 TEST(Constructor, SeveralConstructors)
 {
-	geometry::Hypocycloid H1(1, 12, 23);
+	geometry::Hypocycloid H1(1, 12, 2);
 	ASSERT_EQ(1, H1.getr());
 	ASSERT_EQ(12, H1.getR());
-	ASSERT_EQ(23, H1.getd());
+	ASSERT_EQ(2, H1.getd());
 
 	geometry::Hypocycloid H2(9, 33, 2);
 	ASSERT_EQ(9, H2.getr());
 	ASSERT_EQ(33, H2.getR());
 	ASSERT_EQ(2, H2.getd());
 		
-	geometry::Hypocycloid H3(12, 3, 32);
-	ASSERT_EQ(12, H3.getr());
+	geometry::Hypocycloid H3(1, 3, 3);
+	ASSERT_EQ(1, H3.getr());
 	ASSERT_EQ(3, H3.getR());
-	ASSERT_EQ(32, H3.getd());
+	ASSERT_EQ(3, H3.getd());
 }
 
-TEST(Constructor, TestException)
+TEST(Constructor, Error)
 {
-	ASSERT_ANY_THROW(lab2::Hypocycloid(0));
-	ASSERT_ANY_THROW(lab2::Hypocycloid(0, 5));
-	ASSERT_ANY_THROW(lab2::Hypocycloid(-6, 5));
-	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 10));
-	ASSERT_ANY_THROW(lab2::Hypocycloid(7, 0));
-
-	try { lab2::Hypocycloid(7, -5, 9); }
-	catch (std::exception& err) {
+	try { geometry::Hypocycloid H1(1, 12, 1); }
+	catch (std::invalid_argument& err)
+	{
 		std::cout << err.what();
-		EXPECT_EQ(err.what(), std::string("Internal radius must be bigger than 0"));
+		EXPECT_EQ(err.what(), std::string("Incorrect pen length (less than 1)!"));
 	}
-	catch (...) { FAIL() << "Expected other exception"; }
+	try { geometry::Hypocycloid H1(0, 12, 13); }
+	catch (std::invalid_argument& err) {
+		std::cout << err.what();
+		EXPECT_EQ(err.what(), std::string("Incorrect generating circle radius (less than 0)!"));
+	}
+
+	EXPECT_THROW(geometry::Hypocycloid H1(1, -12, 13), std::invalid_argument);
 }
 
-TEST(HypocycloidMethods, Setters)
+TEST(Hypocycloid, Setters)
 {
-	lab2::Hypocycloid h;
-	h.setR_EX(10);
-	ASSERT_EQ(10, h.getR_EX());
-	h.setR_IN(9);
-	ASSERT_EQ(9, h.getR_IN());
-	h.setD(5);
-	ASSERT_EQ(5, h.getD());
-
-	ASSERT_ANY_THROW(h.setR_EX(-5));
-	ASSERT_ANY_THROW(h.setR_IN(10));
-	ASSERT_ANY_THROW(h.setR_IN(0));
-	ASSERT_ANY_THROW(h.setR_IN(-12));
+	geometry::Hypocycloid H1(1, 12, 4);
+	H1.setr(4);
+	H1.setR(11);
+	H1.setd(5);
+	EXPECT_EQ(4, H1.getr());
+	EXPECT_EQ(11, H1.getR());
+	EXPECT_EQ(5, H1.getd());
 }
-
-TEST(HypocycloidMethods, Parameters)
+TEST(Hypocycloid, SettersError)
 {
-	lab2::Hypocycloid a;
-	lab2::Hypocycloid b(5, 4, 6);
-	lab2::Hypocycloid c(5, 4, 3);
-
-	ASSERT_STREQ("Ordinary", a.type());
-	ASSERT_STREQ("Elongated", b.type());
-	ASSERT_STREQ("Shortened", c.type());
-
-	ASSERT_EQ(lab2::Point(3, 1), a.limiting_radii());
-	ASSERT_EQ(lab2::Point(7, 5), b.limiting_radii());
-	ASSERT_EQ(lab2::Point(4, 2), c.limiting_radii());
-}
-
-TEST(HypocycloidMethods, Angle)
+	geometry::Hypocycloid H1(1, 8, 4);
+	EXPECT_THROW(H1.setr(8), std::invalid_argument);
+ }
+TEST(Hypocycloid, Type)
 {
-	const double err = 0.0001;
-	double pi = 3.14159;
-	lab2::Hypocycloid a;
-	lab2::Hypocycloid b(10, 2, 3);
-	lab2::Hypocycloid c(5, 4);
+	geometry::Hypocycloid H1(2, 12, 4);
+	geometry::Hypocycloid H2(3, 12, 2);
+	geometry::Hypocycloid H3(2, 7, 2);
 
-	ASSERT_NEAR(8, a.curvature_radius(pi), err);   
-	ASSERT_NEAR(0.2857, b.curvature_radius(0), err);
-	ASSERT_NEAR(5.0612, c.curvature_radius(2), err);
+	EXPECT_STREQ("Elongated Hypocycloid", H1.Hypocycloid_type());
+	EXPECT_STREQ("Shortened Hypocycloid", H2.Hypocycloid_type());
+	EXPECT_STREQ("Normal Hypocycloid", H3.Hypocycloid_type());
+}
+TEST(Hypocycloid, Area)
+{
+	geometry::Hypocycloid H2(4, 8, 5);
+	EXPECT_NEAR(135, H2.Hypocycloid_Area(30), error);
+}
+TEST(Hypocycloid, RadiusCurv)
+{
+	geometry::Hypocycloid H1(4, 5, 4);
+	EXPECT_NEAR(0.53, H1.Radius_of_Curvature(30), error);
 
-	ASSERT_NEAR(3, a.point_from_angle(0).x, err);
-	ASSERT_NEAR(0, a.point_from_angle(0).y, err);
-	ASSERT_NEAR(-5.388378, b.point_from_angle(3).x, err);
-	ASSERT_NEAR(2.738678, b.point_from_angle(3).y, err);
-	ASSERT_NEAR(-3, c.point_from_angle(-4 * pi).x, err);
-	ASSERT_NEAR(0, c.point_from_angle(-4 * pi).y, err);
+	geometry::Hypocycloid H2(2, 6, 3);
+	EXPECT_NEAR(12.48, H2.Radius_of_Curvature(45), error);
 
-	ASSERT_NEAR(0, a.area(0), err);
-	ASSERT_NEAR(29.191129, b.area(0.5 * pi), err);
-	ASSERT_NEAR(-10.624769, c.area(2 * pi), err);
+	geometry::Hypocycloid H3(4, 7, 2);
+	EXPECT_NEAR(8.597, H3.Radius_of_Curvature(30), error);
 }
 
-
+TEST(Hypocycloid, Point)
+{
+	double x, y;
+	geometry::Hypocycloid H1(4, 5, 4);
+	H1.getPoint(30, x, y);
+	EXPECT_NEAR(1.54, x, error);
+	EXPECT_NEAR(-4.74, y, error);
+}
 int main(int argc, char* argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
