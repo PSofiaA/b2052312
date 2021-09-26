@@ -1,15 +1,14 @@
 #pragma once
 #include <iostream> 
 #include <cmath>
-#define _USE_MATH_DEFINES
 
 namespace geometry{
 	class Hypocycloid
 	{
 	private:
-		double r, //радиус производящей окрти - меньш(та что движется) 
-			R; //радиус направляющей окружности
-		double d; //расстояние от описывающей точки до центра производящей окружности
+		double r, 
+			R;
+		double d; 
 	public://constructors
 		Hypocycloid(double r, double R, double d );
 		//setters
@@ -22,9 +21,9 @@ namespace geometry{
 		double getd() const { return d; };
 
 		void getPoint(double t, double& x, double& y);
-		const char* Hypocycloid_type();
-		double Radius_of_Curvature(double t);
-		double Hypocycloid_Area(double t);
+		const char* Hypocycloid_type() const;
+		double Radius_of_Curvature(double t) const;
+		double Hypocycloid_Area(double t) const;
 	};
 
 }
