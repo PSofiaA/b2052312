@@ -73,7 +73,7 @@ TEST(Hypocycloid, Type)
 TEST(Hypocycloid, Area)
 {
 	geometry::Hypocycloid H2(4, 8, 5);
-	EXPECT_NEAR(135, H2.Hypocycloid_Area(30), error);
+	EXPECT_NEAR(315, H2.Hypocycloid_Area(30), error);
 }
 TEST(Hypocycloid, RadiusCurv)
 {

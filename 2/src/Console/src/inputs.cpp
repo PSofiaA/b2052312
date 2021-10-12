@@ -41,7 +41,7 @@ int Change_Pen_Length(geometry::Hypocycloid& Hypocycloid) //изменение d
 }
 int Input_Angle(double& t) //ввод угла
 {
-	if (get(t, 0, "Input angle") < 0) //лимит для удобсвта
+	if (get(t, 0, "Input angle") < 0) 
 		return -1;
 	return 0;
 }
