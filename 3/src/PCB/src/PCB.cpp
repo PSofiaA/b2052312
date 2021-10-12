@@ -5,7 +5,8 @@ const char* error[]{
 		"Error! Contact could be connected only to 1 or 0 element\n",
 		"Error! Overload! \n",
 		"Error! Incorrect index! \n",
-		"Incorrect connection! \n"
+		"Incorrect connection! \n",
+		"Incorrect input! \n"
 };
 bool Contact::operator==(const Contact a) const noexcept
 {
@@ -20,7 +21,7 @@ Contact::Contact() noexcept
 }
 Contact::Contact(const int type, int x, int y)
 {
-	if (type > 1)
+	if (type > 1 || type < 0)
 		throw invalid_argument(error[0]);
 	this->type = type;
 	this->x = x;
@@ -28,13 +29,13 @@ Contact::Contact(const int type, int x, int y)
 	this->connected_num = -1;
 }
 PCB::PCB() noexcept {
-	// здесь пам€ть под массив сигналов выдел€ть не нужно, она выделена при компил€ции
-	// инициализировать сигналы тоже не нужно - при выделении пам€ти работает конструктор сигнала по умолчанию
 	this->Inputs = 0;
 	this->Outputs = 0;
 }
 PCB::PCB(const int In,const int Out)
 {
+	if (In < 0 || Out < 0)
+		throw invalid_argument(error[5]);
 	if (In + Out > 20)
 		throw logic_error(error[2]);
 	this->Inputs = In;
@@ -59,6 +60,14 @@ PCB PCB::get_Contacts(Contact*& c) noexcept
 	for (int i = 0; i < Inputs + Outputs; i++)
 		c[i] = this->trass[i];
 	return *this;
+}
+int PCB::get_Inputs() noexcept
+{
+	return Inputs;
+}
+int PCB::get_Outputs() noexcept
+{
+	return Outputs;
 }
 
 PCB PCB::print() const noexcept
@@ -94,7 +103,7 @@ PCB PCB::create_contact(int type, int X, int Y)
 PCB PCB::add_contact(Contact c)
 {
 	if (Inputs + Outputs >= 20)
-		throw logic_error(error[2]);
+		throw length_error(error[5]);
 	if (existance(c) == 0)
 	{
 		this->trass[Inputs + Outputs] = c;
@@ -129,9 +138,9 @@ PCB PCB::connect(int a, int b)
 	if (a > Inputs + Outputs || b > Inputs + Outputs)
 		throw invalid_argument(error[3]);
 	if (this->trass[a].type == this->trass[b].type)
-		throw invalid_argument(error[4]);
+		throw invalid_argument(error[3]);
 	else if (check(a)==-1 || check(b)==-1)
-		throw invalid_argument(error[4]);
+		throw invalid_argument(error[3]);
 	else
 	{
 		this->trass[a].connected_num = b;
@@ -171,3 +180,15 @@ PCB PCB::highlight(const int choice) noexcept
 	}
 	return *this;
 }
+/*PCB::PCB(int type, int x, int y)
+{
+	if (type > 1 || type < 0)
+		throw invalid_argument(error[0]);
+	this->trass[0].type = type;
+	if (type == 1)
+		this->Inputs++;
+	else this->Outputs++;
+	this->trass[0].x = x;
+	this->trass[0].y = y;
+	this->trass[0].connected_num = -1;
+}*/
