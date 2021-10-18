@@ -7,7 +7,7 @@ const char* dialog[]
 	"3. Highlight group of contacts",
 	"4. Get length between two contacts",
 	"5. Print all",
-	
+	"6. Find contact by index",
 };
 const int NMsgs = sizeof(dialog) / sizeof(dialog[0]);
 int main_menu() {
@@ -37,7 +37,7 @@ int Dadd_cont(PCB& pcb)
 	} while (t < 0);
 	try
 	{
-		pcb.create_contact(t, x, y);
+		pcb.add_contact(t, x, y);
 	}
 	catch (std::logic_error& error)
 	{
@@ -67,7 +67,20 @@ int Dhighlight(PCB& pcb)
 	int choice;
 	if (get(choice, "Choose criterion: \t 1. INPUTS \t2.OUTPUTS") < 0)
 			return -1;
-	pcb.highlight(choice);
+	Contact* a = new Contact[SIZE];
+	pcb.highlight(choice, a);
+	cout << "Here's the highlighted group: " << std::endl;
+	if (choice == 1)
+	{
+		for (int i = 0; i < pcb.get_Inputs(); i++)
+		cout << i + 1 << "th contact " << "X: " << a[i].x << " Y: " << a[i].y << std::endl;
+	}
+	if (choice == 2)
+	{
+		for (int i = 0; i < pcb.get_Outputs(); i++)
+			cout << i + 1 << "th contact " << "X: " << a[i].x << " Y: " << a[i].y << std::endl;
+	}
+	delete[] a;
 	return 0;
 }
 int Dlength(PCB& pcb)
@@ -90,7 +103,29 @@ int Dlength(PCB& pcb)
 }
 int Dprint(PCB& pcb)
 {
-	pcb.print();
+	cout << pcb;
+	return 0;
+}
+int Dfind(PCB& pcb)
+{
+	int index;
+	Contact a;
+	if (get(index, "Input contact index you want to be found: ") < 0)
+		return -1;
+	try
+	{
+		a = pcb[index-1];
+		if(a.type == INPUT)
+			cout << index << "th contact TYPE:INPUT ";
+		else 
+			cout << index << "th contact TYPE:OUTPUT ";
+		cout << "X: " << a.x << " Y: " << a.y << std::endl;
+	}
+	catch (std::logic_error& error)
+	{
+		std::cout << "Attempt failed" << std::endl;
+		std::cout << error.what();
+	}
 	return 0;
 }
 

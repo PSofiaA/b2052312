@@ -26,3 +26,4 @@ int Dconnect(PCB& pcb);
 int Dhighlight(PCB& pcb);
 int Dlength(PCB& pcb);
 int Dprint(PCB& pcb);
+int Dfind(PCB& pcb);
