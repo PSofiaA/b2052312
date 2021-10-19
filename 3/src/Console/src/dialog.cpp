@@ -28,7 +28,8 @@ int Dadd_cont(PCB& pcb)
 	int t;
 	int x, y;
 	const char* message = "";
-	do
+	Contact c;
+	/*do
 	{
 		std::cout << message << std::endl;
 		message = "Incorrect input!";
@@ -43,6 +44,24 @@ int Dadd_cont(PCB& pcb)
 	{
 		std::cout << "Attempt failed" << std::endl;
 		std::cout << error.what();
+	}
+		//if (!pcb.check(c))
+		//return -1;*/
+	cout << "Enter type (1 - input, 0 - output), X and Y coordinates of a contact: --> " << endl;
+	try
+	{
+		cin >> c;
+		pcb += c;
+	}
+	catch (logic_error& error)
+	{
+		cout << "Attempt failed" << endl;
+		cout << error.what();
+	}
+	catch (invalid_argument& error)
+	{
+		cout << "Attempt failed" << endl;
+		cout << error.what();
 	}
 	return 0;
 }

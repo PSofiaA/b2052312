@@ -45,7 +45,7 @@ public:
 	int get_Size() const noexcept;
 
 	friend ostream& operator<<(ostream& out, const  PCB& pcb);
-	PCB operator+=(Contact c);
+	PCB& operator+=(Contact& c);
 	Contact& operator[](int index);
 	//PCB operator--();
 	//PCB operator--(int);

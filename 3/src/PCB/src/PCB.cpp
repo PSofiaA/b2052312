@@ -233,7 +233,7 @@ istream& operator>>(istream& in, Contact& contact)
 	contact.y = y;
 	return in;
 }
-PCB PCB::operator+=(Contact c)
+PCB& PCB::operator+=(Contact& c)
 {
 	try {
 		return add_contact(c);

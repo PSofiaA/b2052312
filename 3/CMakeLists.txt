@@ -6,4 +6,3 @@ project(${PROJECT_NAME})
 
 add_subdirectory(src/PCB)
 add_subdirectory(src/Console)
-add_subdirectory(src/Tests)
