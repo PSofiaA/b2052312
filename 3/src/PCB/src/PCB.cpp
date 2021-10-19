@@ -169,7 +169,7 @@ int PCB::length(int a, int b) const
 	int AB, s1, s2;
 	a = a - 1;
 	b = b - 1;
-	if (a >Inputs + Outputs || b > Inputs + Outputs)
+	if (a >= Inputs + Outputs || b >= Inputs + Outputs)
 		throw logic_error(error[2]);
 	else
 	{
@@ -228,6 +228,8 @@ istream& operator>>(istream& in, Contact& contact)
 {
 	int type, x, y;
 	in >> type >> x >> y;
+	if (type < 0 || type>1)
+		throw invalid_argument(error[0]);
 	contact.type = type;
 	contact.x = x;
 	contact.y = y;

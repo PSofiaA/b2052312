@@ -63,6 +63,7 @@ int Dadd_cont(PCB& pcb)
 		cout << "Attempt failed" << endl;
 		cout << error.what();
 	}
+	Dprint(pcb);
 	return 0;
 }
 int Dconnect(PCB& pcb)
