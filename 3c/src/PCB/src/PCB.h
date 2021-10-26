@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
-#include<time.h>
+#include <time.h>
 #include <string>
 #include <cmath>
-#define SIZE 20
 using namespace std;
 enum Type
 {
@@ -12,7 +11,7 @@ enum Type
 };
 struct Contact 
 {
-	int type;
+	Type type;//дура там не инт
 	int x;
 	int y;
 	int connected_num;
@@ -20,42 +19,44 @@ struct Contact
 	friend istream& operator>>(istream& in, Contact& contact);
 	Contact() noexcept;
 	Contact(const int type, int x, int y);
-	//huevyii constructor
-	Contact(const Contact& с) : type(с.type), x(с.x), y(с.y), connected_num(с.connected_num) {}; // copy constructor
 	bool operator==(const Contact a) const noexcept;
-	Contact& operator=(Contact c);
 };
 class PCB
 {
 private:
 	int Inputs = 0; 
 	int Outputs = 0;
-	Contact trass[SIZE];
+	Contact* trass = nullptr;
 
 	bool check(int index) const noexcept;
 	bool check(int a, int b) const noexcept;
-	Contact find(int index) const;
+	const Contact& find(int index) const;
 public:
 	PCB() noexcept; // default constructor
 	PCB(int type, int x, int y);
 	PCB(const int In,const int Out);
+	PCB(const PCB&);
+	PCB(PCB&&); 
 
-	PCB get_Contacts(Contact *& c) noexcept;
+	void changeSize();
+	PCB get_Contacts(Contact *&) noexcept; //! пересмотреть (как сказал кот он лишний тк есть финд)
 	int get_Inputs() const noexcept;
 	int get_Outputs() const noexcept;
 	int get_Size() const noexcept;
-
-	friend ostream& operator<<(ostream& out, const  PCB& pcb);
-	PCB& operator+=(Contact& c);
-	Contact& operator[](int index);
+	//перегрузить + его во френдзону 
+	PCB& operator =(PCB&);
+	PCB& operator=(PCB&&);
+	friend ostream& operator<<(ostream& out, const PCB&);
+	PCB& operator+=(Contact&);
+	const Contact& operator[](int index) const;
 	//PCB operator--();
 	//PCB operator--(int);
 
 	//PCB& deleteContact(int index);
-	bool existance(Contact c) const noexcept;
-	PCB add_contact(int type, int X, int Y); //create -> add
-	PCB add_contact(Contact c);
-	PCB connect(int a, int b);
-	PCB highlight(const int choice, Contact*& result) const noexcept;
+	bool existance(const Contact& c) const noexcept; //по ссылке тк она меньше в памяти
+	PCB& add_contact(int type, int X, int Y); //create -> add
+	PCB& add_contact(Contact& c); 
+	PCB& connect(int a, int b);
+	PCB& highlight(const int choice, Contact*& result) const noexcept;
 	int length(int a, int b) const;
 };
