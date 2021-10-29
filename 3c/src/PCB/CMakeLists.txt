@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(PROJECT_NAME PCB)
+set(PROJECT_NAME PCBD)
 
 project(${PROJECT_NAME})
 

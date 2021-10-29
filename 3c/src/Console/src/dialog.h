@@ -1,5 +1,5 @@
 #pragma once
-#include <PCB.h>
+#include <PCBD.h>
 template <typename Type>
 int get(Type& x, const char* message)
 {
@@ -27,3 +27,5 @@ int Dhighlight(PCB& pcb);
 int Dlength(PCB& pcb);
 int Dprint(PCB& pcb);
 int Dfind(PCB& pcb);
+int Dcombine(PCB& pcb);
+int Ddelete(PCB& pcb);

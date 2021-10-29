@@ -7,4 +7,4 @@ project(${PROJECT_NAME})
 file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h")
 add_executable(${PROJECT_NAME} ${SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC PCB)
+target_link_libraries(${PROJECT_NAME} PUBLIC PCBD)

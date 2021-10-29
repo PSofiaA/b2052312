@@ -11,14 +11,14 @@ enum Type
 };
 struct Contact 
 {
-	Type type;//дура там не инт
+	Type type;
 	int x;
 	int y;
 	int connected_num;
 
 	friend istream& operator>>(istream& in, Contact& contact);
 	Contact() noexcept;
-	Contact(const int type, int x, int y);
+	Contact(Type type, int x, int y);
 	bool operator==(const Contact a) const noexcept;
 };
 class PCB
@@ -33,10 +33,10 @@ private:
 	const Contact& find(int index) const;
 public:
 	PCB() noexcept; // default constructor
-	PCB(int type, int x, int y);
+	PCB(Type type, int x, int y);
 	PCB(const int In,const int Out);
 	PCB(const PCB&);
-	PCB(PCB&&); 
+	PCB(PCB&&)noexcept;
 
 	void changeSize();
 	PCB get_Contacts(Contact *&) noexcept; //! пересмотреть (как сказал кот он лишний тк есть финд)
@@ -45,18 +45,18 @@ public:
 	int get_Size() const noexcept;
 	//перегрузить + его во френдзону 
 	PCB& operator =(PCB&);
-	PCB& operator=(PCB&&);
+	PCB& operator=(PCB&&) noexcept;
 	friend ostream& operator<<(ostream& out, const PCB&);
 	PCB& operator+=(Contact&);
 	const Contact& operator[](int index) const;
-	//PCB operator--();
-	//PCB operator--(int);
+	friend void operator+(PCB& pcb1, PCB& pcb2);
+	PCB& PCB::operator--();
+	PCB& PCB::operator--(int);
 
-	//PCB& deleteContact(int index);
 	bool existance(const Contact& c) const noexcept; //по ссылке тк она меньше в памяти
-	PCB& add_contact(int type, int X, int Y); //create -> add
+	PCB& add_contact(Type type, int X, int Y); //create -> add
 	PCB& add_contact(Contact& c); 
 	PCB& connect(int a, int b);
-	PCB& highlight(const int choice, Contact*& result) const noexcept;
+	void highlight(const int choice, Contact*& result) const noexcept;
 	int length(int a, int b) const;
 };

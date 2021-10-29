@@ -8,6 +8,8 @@ const char* dialog[]
 	"4. Get length between two contacts",
 	"5. Print all",
 	"6. Find contact by index",
+	"7. Combine two boards",
+	"8. Delete last contact"
 };
 const int NMsgs = sizeof(dialog) / sizeof(dialog[0]);
 int main_menu() {
@@ -25,28 +27,8 @@ int main_menu() {
 }
 int Dadd_cont(PCB& pcb)
 {
-	int t;
-	int x, y;
 	const char* message = "";
 	Contact c;
-	/*do
-	{
-		std::cout << message << std::endl;
-		message = "Incorrect input!";
-		if (get(t, "Input contact type: ") < 0 || get(x, "Input x coordinate") < 0 || get(y, "Input y coordinate") < 0)
-			return -1;
-	} while (t < 0);
-	try
-	{
-		pcb.add_contact(t, x, y);
-	}
-	catch (std::logic_error& error)
-	{
-		std::cout << "Attempt failed" << std::endl;
-		std::cout << error.what();
-	}
-		//if (!pcb.check(c))
-		//return -1;*/
 	cout << "Enter type (1 - input, 0 - output), X and Y coordinates of a contact: --> " << endl;
 	try
 	{
@@ -87,7 +69,7 @@ int Dhighlight(PCB& pcb)
 	int choice;
 	if (get(choice, "Choose criterion: \t 1. INPUTS \t2.OUTPUTS") < 0)
 			return -1;
-	Contact* a = new Contact[SIZE];
+	Contact* a = new Contact[pcb.get_Size()];
 	pcb.highlight(choice, a);
 	cout << "Here's the highlighted group: " << std::endl;
 	if (choice == 1)
@@ -140,6 +122,36 @@ int Dfind(PCB& pcb)
 		else 
 			cout << index << "th contact TYPE:OUTPUT ";
 		cout << "X: " << a.x << " Y: " << a.y << std::endl;
+	}
+	catch (std::logic_error& error)
+	{
+		std::cout << "Attempt failed" << std::endl;
+		std::cout << error.what();
+	}
+	return 0;
+}
+int Dcombine(PCB& pcb)
+{
+	cout << "First step: you must create second printed circuit board" << endl;
+	PCB* pcb2 = new PCB();
+	int counter;
+	cout << "Input size of trass: " << endl;
+	cin >> counter;
+	for (int i = 0; i < counter; i++)
+	{
+		Dadd_cont(*pcb2);
+	}
+	pcb + *pcb2;
+	cout << "Here's the result: " << endl;
+	Dprint(pcb);
+	delete pcb2;
+	return 0;
+}
+int Ddelete(PCB& pcb)
+{
+	try
+	{
+		pcb--;
 	}
 	catch (std::logic_error& error)
 	{

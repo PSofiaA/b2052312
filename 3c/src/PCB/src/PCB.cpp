@@ -1,4 +1,4 @@
-#include "PCB.h"
+#include "PCBD.h"
 
 const char* error[]{
 		"Error! Incorrect type! Output - 0, input - 1\n", //0
@@ -14,44 +14,40 @@ bool Contact::operator==(const Contact a) const noexcept
 }
 Contact::Contact() noexcept 
 {
-	this->type = 0;
+	this->type = OUTPUT;
 	this->x = 0;
 	this->y = 0;
 	this->connected_num = -1;
 }
-Contact::Contact(const int type, int x, int y)
+Contact::Contact(Type type, int x, int y)
 {
-	if (type > 1 || type<0)
+	if (type > 1 || type < 0)
 		throw invalid_argument(error[0]);
 	this->type = type;
 	this->x = x;
 	this->y = y;
 	this->connected_num = -1;
 }
-PCB::PCB() noexcept {
-	// здесь пам€ть под массив сигналов выдел€ть не нужно, она выделена при компил€ции
-	// инициализировать сигналы тоже не нужно - при выделении пам€ти работает конструктор сигнала по умолчанию
+PCB::PCB() noexcept 
+{
 	this->Inputs = 0;
 	this->Outputs = 0;
 }
-PCB::PCB(int type, int x, int y)
+PCB::PCB(Type type, int x, int y)
 {
-	if (type > 1) //типы не очень правильные изменить
+	if (type > 1)
 		throw invalid_argument(error[0]);
 	changeSize();
 	this->trass[0].type = type;
-	if (type == 1) //испольховать более адекватные способы через конс труктор например 
+	if (type == 1) 
 		this->Inputs++;
 	else this->Outputs++;
 	this->trass[0].x = x;
 	this->trass[0].y = y;
 	this->trass[0].connected_num = -1;
 }
-PCB::PCB(const int In,const int Out) // вызыват ь проверк у со€н помни про уникалбностб
-{//mmmmmm hueta
-	if (In + Out > 20)
-		throw logic_error(error[2]);
-	this->Inputs = In;
+PCB::PCB(const int In,const int Out)
+{	this->Inputs = In;
 	this->Outputs = Out;
 	srand(time(NULL));
 	for (int i = 0; i < In; i++) {
@@ -90,7 +86,7 @@ int PCB::get_Outputs() const noexcept
 }
 PCB PCB::get_Contacts(Contact*& c) noexcept
 {
-	for (int i = 0; i < Inputs + Outputs; i++)
+	for (int i = 0; i < this->get_Size(); i++)
 		c[i] = this->trass[i];
 	return *this;
 }
@@ -126,7 +122,7 @@ PCB& PCB::operator=(PCB&& pcb) noexcept
 	}
 	return*this;
 }
-PCB& PCB::add_contact(int type, int X, int Y)
+PCB& PCB::add_contact(Type type, int X, int Y)
 {
 	try
 	{
@@ -144,26 +140,24 @@ PCB& PCB::add_contact(int type, int X, int Y)
 }
 PCB& PCB::add_contact(Contact& c)
 {
-	if (Inputs + Outputs >= 20)
-		throw logic_error(error[2]);
 	if (existance(c))
 		throw invalid_argument(error[4]);
 	changeSize();
-	this->trass[Inputs + Outputs] = c;
-		if (c.type == 0)
+	this->trass[this->get_Size()] = c;
+		if (c.type == OUTPUT)
 			Outputs++;
 		else Inputs++;
-	return *this;
+	return PCB(); //сделать как в перегруженном операторе сложени€ передавать не копию а сам экземпл€р
 }
 const Contact& PCB::find(int index) const
 {
-	if (index > Inputs + Outputs)
+	if (index > this->get_Size())
 		throw logic_error(error[2]);
 	return this->trass[index];	
 }
 bool PCB::existance(const Contact& c) const noexcept
 {
-	for (int i = 0; i < Inputs + Outputs; i++)
+	for (int i = 0; i < this->get_Size(); i++)
 	{
 		if (c == trass[i])
 			return true;
@@ -178,9 +172,7 @@ bool PCB::check(int index) const noexcept
 }
 bool PCB::check(int a, int b) const noexcept
 {
-	if (a > SIZE || b > SIZE)
-		return false;
-	if (a > Inputs + Outputs || b > Inputs + Outputs)
+	if (a >= this->get_Size() || b >= this->get_Size())
 		return false;
 	if (this->trass[a].type == this->trass[b].type)
 		return false;
@@ -188,8 +180,9 @@ bool PCB::check(int a, int b) const noexcept
 }
 void PCB::changeSize()
 {
-	Contact* t = new Contact[this->Inputs + this->Outputs + 1];
-	copy_n(this->trass, this->Inputs + this->Outputs, t);
+	int size = this->get_Size();
+	Contact* t = new Contact[size + 1];
+	copy_n(this->trass, size, t);
 	delete[] this->trass;
 	this->trass = t;
 }
@@ -211,7 +204,7 @@ int PCB::length(int a, int b) const
 	int AB, s1, s2;
 	a = a - 1;
 	b = b - 1;
-	if (a >= Inputs + Outputs || b >= Inputs + Outputs)
+	if (a >= this->get_Size() || b >= this->get_Size())
 		throw logic_error(error[2]);
 	else
 	{
@@ -221,12 +214,12 @@ int PCB::length(int a, int b) const
 		return AB;
 	}
 }
-PCB& PCB::highlight(const int choice, Contact*&result) const noexcept
+void PCB::highlight(const int choice, Contact*&result) const noexcept
 {
 	int j = 0;
 	if (choice == 1)
 	{
-		for (int i = 0; i < Inputs + Outputs; i++)
+		for (int i = 0; i < this->get_Size(); i++)
 			if (this->trass[i].type == INPUT)
 			{
 				result[j].type = this->trass[i].type;
@@ -238,7 +231,7 @@ PCB& PCB::highlight(const int choice, Contact*&result) const noexcept
 	}
 	if (choice == 2)
 	{
-		for (int i = 0; i < Inputs + Outputs; i++)
+		for (int i = 0; i < this->get_Size(); i++)
 			if (this->trass[i].type == OUTPUT)
 			{
 				result[j].type = this->trass[i].type;
@@ -249,13 +242,12 @@ PCB& PCB::highlight(const int choice, Contact*&result) const noexcept
 				j++;
 			}
 	}
-	return *this;
 }
 ostream& operator<<(ostream& out, const PCB& pcb)
 {
 	if (pcb.Inputs == 0 && pcb.Outputs == 0)
 		out << "Nothing here" << endl;
-	for (int i = 0; i < pcb.Inputs + pcb.Outputs; i++)
+	for (int i = 0; i < pcb.get_Size(); i++)
 	{
 		if (pcb.trass[i].type == INPUT)
 			out << i + 1 << "th contact " << "  TYPE: INPUT, X: " << pcb.trass[i].x << " Y: " << pcb.trass[i].y << endl;
@@ -266,13 +258,29 @@ ostream& operator<<(ostream& out, const PCB& pcb)
 	}
 	return out;
 }
+void operator+(PCB& pcb1, PCB& pcb2)//сложение двух плат
+{
+	if (&pcb1 != &pcb2)
+	{
+		for (int j = 0; j < pcb2.get_Size(); j++)
+			{
+				if (!pcb1.existance(pcb2.trass[j]))
+				{
+					pcb1 += pcb2.trass[j];
+				}
+			}
+	}
+}
 istream& operator>>(istream& in, Contact& contact)
 {
-	int type, x, y;
+	int x, y, type;
 	in >> type >> x >> y;
-	if (type < 0 || type>1)
+	if(type == 1)
+		contact.type = INPUT;
+	else if (type == 0)
+		contact.type = OUTPUT;
+	else 
 		throw invalid_argument(error[0]);
-	contact.type = type;
 	contact.x = x;
 	contact.y = y;
 	return in;
@@ -303,23 +311,26 @@ const Contact& PCB::operator[](int index) const
 	}
 }
 
-/*
-PCB& PCB::operator=(PCB &p)
+PCB &PCB::operator--()
 {
-	this->Inputs = p.Inputs;
-	this->Outputs = p.Outputs;
-	delete[] this->trass;
-	for (int i = 0; i < this->Inputs + this->Outputs; i++)
+	if (this->get_Size() == 0)
+		throw logic_error(error[5]);
+	int size = this->get_Size() - 1;
+	if (this->trass[size].type == OUTPUT)
+		Outputs--;
+	else Inputs--;
+	this->trass[size].x = 0;
+	this->trass[size].y = 0;
+	if (this->trass[size].connected_num != -1)
 	{
-		this->trass[i](p.trass[i]);
+		this->trass[this->trass[size].connected_num].connected_num = -1;
+		this->trass[size].connected_num = -1;
 	}
 	return *this;
-}*/
-/*PCB PCB::operator--()
-{
-	
 }
-PCB PCB::operator--(int)
+PCB &PCB::operator--(int)
 {
-
-}*/
+	PCB tmp = *this;
+	--(*this);
+	return tmp;
+}

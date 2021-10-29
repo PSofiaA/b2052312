@@ -4,7 +4,7 @@ int main()
 	PCB* pcb = new PCB();
 	std::cout << "PRINTED CIRCUIT BOARD" << std::endl;
 	int choice = -1;
-	function_ptr menu[] = { nullptr, Dadd_cont, Dconnect, Dhighlight, Dlength, Dprint, Dfind};
+	function_ptr menu[] = { nullptr, Dadd_cont, Dconnect, Dhighlight, Dlength, Dprint, Dfind, Dcombine, Ddelete};
 	while (true)
 	{	
 		choice = main_menu();
