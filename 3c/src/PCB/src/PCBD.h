@@ -51,7 +51,7 @@ public:
 	const Contact& operator[](int index) const;
 	friend void operator+(PCB& pcb1, PCB& pcb2);
 	PCB& PCB::operator--();
-	PCB& PCB::operator--(int);
+	PCB PCB::operator--(int);
 
 	bool existance(const Contact& c) const noexcept; //по ссылке тк она меньше в памяти
 	PCB& add_contact(Type type, int X, int Y); //create -> add

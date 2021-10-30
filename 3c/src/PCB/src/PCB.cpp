@@ -328,7 +328,7 @@ PCB &PCB::operator--()
 	}
 	return *this;
 }
-PCB &PCB::operator--(int)
+PCB PCB::operator--(int)
 {
 	PCB tmp = *this;
 	--(*this);
