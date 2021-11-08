@@ -11,6 +11,6 @@ add_subdirectory(../../../googletest googletest)
 file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h")
 add_executable(${PROJECT_NAME} ${SRC})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC gtest_main PCB)
+target_link_libraries(${PROJECT_NAME} PUBLIC gtest_main PCBD)
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

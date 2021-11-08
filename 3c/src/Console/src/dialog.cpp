@@ -45,7 +45,6 @@ int Dadd_cont(PCB& pcb)
 		cout << "Attempt failed" << endl;
 		cout << error.what();
 	}
-	Dprint(pcb);
 	return 0;
 }
 int Dconnect(PCB& pcb)
@@ -55,7 +54,7 @@ int Dconnect(PCB& pcb)
 		return -1;
 	try
 	{
-		pcb.connect(i1, i2);
+		pcb.connect(i1-1, i2-1);
 	}
 	catch (std::invalid_argument& error)
 	{
@@ -92,7 +91,7 @@ int Dlength(PCB& pcb)
 		return -1;
 	try
 	{
-		res = pcb.length(i1, i2);
+		res = pcb.length(i1-1, i2-1);
 		std::cout << "Length: " << res << std::endl;
 	}
 	catch (std::logic_error &error)

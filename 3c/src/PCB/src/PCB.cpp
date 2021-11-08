@@ -3,14 +3,14 @@
 const char* error[]{
 		"Error! Incorrect type! Output - 0, input - 1\n", //0
 		"Error! Contact could be connected only to 1 or 0 element\n", //1
-		"Error! Incorrect index! \n", //2
+		"Error! Incorrect number! \n", //2
 		"Invalid connection! \n", //3
 		"This contact already exists \n",//4
 		"Empty \n" //5
 };
 bool Contact::operator==(const Contact a) const noexcept
 {
-	return (this->connected_num == a.connected_num && this->type == a.type && this->x == a.x && this->y == a.y);
+	return (this->x == a.x && this->y == a.y);
 }
 Contact::Contact() noexcept 
 {
@@ -33,12 +33,12 @@ PCB::PCB() noexcept
 	this->Inputs = 0;
 	this->Outputs = 0;
 }
-PCB::PCB(Type type, int x, int y)
+PCB::PCB(int type, int x, int y)
 {
-	if (type > 1)
+	if (type > 1 || type < 0)
 		throw invalid_argument(error[0]);
 	changeSize();
-	this->trass[0].type = type;
+	type == 1 ? this->trass[0].type = INPUT : this->trass[0].type = OUTPUT;
 	if (type == 1) 
 		this->Inputs++;
 	else this->Outputs++;
@@ -47,7 +47,9 @@ PCB::PCB(Type type, int x, int y)
 	this->trass[0].connected_num = -1;
 }
 PCB::PCB(const int In,const int Out)
-{	this->Inputs = In;
+{	if (In < 0 || Out < 0)
+		throw invalid_argument(error[2]);
+	this->Inputs = In;
 	this->Outputs = Out;
 	srand(time(NULL));
 	for (int i = 0; i < In; i++) {
@@ -129,10 +131,6 @@ PCB& PCB::add_contact(Type type, int X, int Y)
 		Contact С(type, X, Y);
 		return add_contact(С);
 	}
-	catch (const logic_error& error) 
-	{
-		throw error;
-	}
 	catch (const invalid_argument& error)
 	{
 		throw error;
@@ -188,8 +186,6 @@ void PCB::changeSize()
 }
 PCB& PCB::connect(int a, int b)
 {
-	a = a - 1;
-	b = b - 1;
 	if (!check(a,b) || !check(a) || !check(b))
 		throw invalid_argument(error[3]);
 	else
@@ -202,9 +198,7 @@ PCB& PCB::connect(int a, int b)
 int PCB::length(int a, int b) const
 {
 	int AB, s1, s2;
-	a = a - 1;
-	b = b - 1;
-	if (a >= this->get_Size() || b >= this->get_Size())
+	if (a >= this->get_Size() || b >= this->get_Size()||a<0||b<0)
 		throw logic_error(error[2]);
 	else
 	{
@@ -258,7 +252,14 @@ ostream& operator<<(ostream& out, const PCB& pcb)
 	}
 	return out;
 }
-void operator+(PCB& pcb1, PCB& pcb2)//сложение двух плат
+istream& operator>>(istream& in, PCB& pcb)
+{
+	Contact c;
+	in >> c;
+	pcb.add_contact(c);
+	return in;
+}
+void operator+(PCB& pcb1, PCB& pcb2)
 {
 	if (&pcb1 != &pcb2)
 	{
@@ -284,6 +285,10 @@ istream& operator>>(istream& in, Contact& contact)
 	contact.x = x;
 	contact.y = y;
 	return in;
+}
+ostream& operator<<(ostream& out, Contact& contact)
+{
+	return out << static_cast<int>(contact.type) << ' ' << contact.x << ' '<< contact.y <<' '<< contact.connected_num;
 }
 PCB& PCB::operator+=(Contact& c)
 {
