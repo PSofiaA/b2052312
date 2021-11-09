@@ -145,7 +145,7 @@ PCB& PCB::add_contact(Contact& c)
 		if (c.type == OUTPUT)
 			Outputs++;
 		else Inputs++;
-	return PCB(); //сделать как в перегруженном операторе сложени€ передавать не копию а сам экземпл€р
+	return PCB();
 }
 const Contact& PCB::find(int index) const
 {
@@ -211,30 +211,18 @@ int PCB::length(int a, int b) const
 void PCB::highlight(const int choice, Contact*&result) const noexcept
 {
 	int j = 0;
-	if (choice == 1)
-	{
-		for (int i = 0; i < this->get_Size(); i++)
-			if (this->trass[i].type == INPUT)
-			{
-				result[j].type = this->trass[i].type;
-				result[j].connected_num = this->trass[i].connected_num;
-				result[j].x = this->trass[i].x;
-				result[j].y = this->trass[i].y;
-				j++;
-			}
-	}
-	if (choice == 2)
-	{
-		for (int i = 0; i < this->get_Size(); i++)
-			if (this->trass[i].type == OUTPUT)
-			{
-				result[j].type = this->trass[i].type;
-				result[j].connected_num = this->trass[i].connected_num;
-				result[j].x = this->trass[i].x;
-				result[j].y = this->trass[i].y;
-				result[j] = this->trass[i];
-				j++;
-			}
+	Type t;
+	choice == 1 ? t = INPUT : t = OUTPUT;
+	for (int i = 0; i < this->get_Size(); i++)
+	{		
+		if (this->trass[i].type == t)
+		{
+			result[j].type = this->trass[i].type;
+			result[j].connected_num = this->trass[i].connected_num;
+			result[j].x = this->trass[i].x;
+			result[j].y = this->trass[i].y;
+			j++;
+		}
 	}
 }
 ostream& operator<<(ostream& out, const PCB& pcb)
@@ -265,10 +253,7 @@ void operator+(PCB& pcb1, PCB& pcb2)
 	{
 		for (int j = 0; j < pcb2.get_Size(); j++)
 			{
-				if (!pcb1.existance(pcb2.trass[j]))
-				{
-					pcb1 += pcb2.trass[j];
-				}
+				pcb1 += pcb2.trass[j];
 			}
 	}
 }
@@ -294,10 +279,6 @@ PCB& PCB::operator+=(Contact& c)
 {
 	try {
 		return add_contact(c);
-	}
-	catch (const logic_error& error)
-	{
-		throw error;
 	}
 	catch (const invalid_argument& error)
 	{

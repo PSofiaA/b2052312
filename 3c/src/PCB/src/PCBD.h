@@ -60,6 +60,6 @@ public:
 	PCB& add_contact(Type type, int X, int Y);
 	PCB& add_contact(Contact& c); 
 	PCB& connect(int a, int b);
-	void highlight(const int choice, Contact*& result) const noexcept;
+	void highlight(const int choice, Contact*& result) const noexcept; 
 	int length(int a, int b) const;
 };
