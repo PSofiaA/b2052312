@@ -24,6 +24,6 @@ namespace TowerDefence
 		void set_max_HP(int md) { max_durability = md; }
 		void set_gold(int g) { gold = g; }
 
-		int take_damage();
+		int take_damage(int damage);
 	};
 }

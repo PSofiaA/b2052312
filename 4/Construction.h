@@ -1,4 +1,6 @@
 #pragma once
+#include "Enemy.h"
+#include "Effect.h"
 namespace TowerDefence
 {
 	class Construction
@@ -7,6 +9,8 @@ namespace TowerDefence
 		int radius;
 		int price;
 		int lvl;
+		Effect* effect;
+		TERRAIN type;
 	public:
 		int get_radius() { return radius; };
 		int get_price() { return price; };
@@ -16,7 +20,7 @@ namespace TowerDefence
 		void set_price(int p) { price = p; };
 		void set_lvl(int l) { lvl = l; };
 
-		virtual void attack(Enemy target);
+		virtual void attack(Enemy &target) =0;
 	};
 };
 	

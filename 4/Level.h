@@ -1,29 +1,18 @@
 #pragma once
 #include "Enemy.h"
-#include "Liar.h"
+#include "Lair.h"
 #include "castle.h"
 #include <list>
-using std::list;
+using std::vector;
 
 namespace TowerDefence
 {	
-	enum TERRAIN {
-			ROAD, FIELD, FOREST
-	};
-	struct Tile {
-		TERRAIN type;
-		int size;
-
-		Tile(TERRAIN b_type, int size);
-		};
 	class Level
 	{
 	private:
 		int moves;
 		int width, height;
-		Castle* castle;
-		Liar* liar;
-		std::vector<Enemy*>  m_enemies;
+
 	public:
 		int get_moves() { return moves; };
 		int get_width() { return width; };
