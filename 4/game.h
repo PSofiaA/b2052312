@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "Construction.h"
-#include "castle.h"
+#include "Castle.h"
 #include "Level.h"
 #include "Lair.h"
 
@@ -11,17 +11,36 @@ using std::vector;
 
 namespace TowerDefence
 {
-	class Game
+	template <typename Type>
+	int get(Type& x, const char* message)
 	{
-	private:
-		Lair* lair;
-		std::vector<Enemy*>  enemies;
+		while (true)
+		{
+			std::cout << message << std::endl;
+			std::cin >> x;
+			if (std::cin.eof() || std::cin.bad())
+				return -1;
+			else if (std::cin.fail())
+			{
+				std::cin.clear();
+				std::cin.ignore(32767, '\n');
+				std::cout << "Input error. Try again\n";
+			}
+			else
+				return 0;
+		}
+	}
+	typedef int (*function_ptr)(Level&); //idea from 3rd lab to work with function pointer
+	int make_move(Level&);
+	int create_tower(Level&);
+	int update_castle(Level&);
+	int update_tower(Level&);
 
-	public:
-		Game();
-		void start(); //передать все для старта нового уровня
-		void game_over();
-		void new_level();
-
-	};
+	void enter(); //EXPERIMENTAL!!
+	int main_menu(Level&);
+	bool general_question();
+	void game_over();
+	void game_win();
+	int exit(Level&);
+//std::vector<Enemy*>  enemies;
 }

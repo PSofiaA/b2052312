@@ -45,13 +45,6 @@ TEST(PCB, RandConstructor)
 	EXPECT_EQ(pcb.get_Inputs(), 9);
 	EXPECT_EQ(pcb.get_Outputs(), 2);
 }
-TEST(PCB, RandConstructorError)
-{
-	EXPECT_THROW(PCB(12, 18), std::logic_error);
-	EXPECT_THROW(PCB(22, 5), std::logic_error);
-	EXPECT_THROW(PCB(-2, 1), std::invalid_argument);
-	EXPECT_THROW(PCB(2, -1), std::invalid_argument);
-}
 TEST(PCB, AddContact)
 {
 	Contact* trass = new Contact[5];
@@ -78,15 +71,15 @@ TEST(PCB, AddContact)
 }
 TEST(PCB, AddContactError)
 {
-	PCB pcb = PCB(10, 11);
-	EXPECT_THROW(pcb.add_contact(Contact(1, 2, 4)), std::length_error);
+	PCB pcb = PCB();
+	EXPECT_THROW(pcb.add_contact(Contact(-1, 2, 4)), std::invalid_argument);
 	//EXPECT_THROW(pcb.add_contact(Contact(1, 1, 4)), std::logic_error);
 }
 TEST(PCB, CreateContact)
 {
 	PCB pcb = PCB(1, 1);
 	Contact* trass = new Contact[5];
-	pcb.create_contact(1, 2, 4);
+	pcb.add_contact(1, 2, 4);
 	pcb.get_Contacts(trass);
 	EXPECT_EQ(pcb.get_Inputs(), 2);
 	EXPECT_EQ(pcb.get_Outputs(), 1);
@@ -95,7 +88,7 @@ TEST(PCB, CreateContact)
 	EXPECT_EQ(trass[2].y, 4);
 	EXPECT_EQ(trass[2].connected_num, -1);
 
-	pcb.create_contact(0, 1, 3);
+	pcb.add_contact(0, 1, 3);
 	pcb.get_Contacts(trass);
 	EXPECT_EQ(pcb.get_Inputs(), 2);
 	EXPECT_EQ(pcb.get_Outputs(), 2);
@@ -108,8 +101,8 @@ TEST(PCB, CreateContact)
 TEST(PCB, CreateContactError)
 {
 	PCB pcb = PCB(11, 21);
-	EXPECT_THROW(pcb.create_contact(1, 2, 4), std::length_error);
-	//EXPECT_THROW(pcb.create_contact(1, 1, 4), std::logic_error);
+	EXPECT_THROW(pcb.add_contact(Contact(-1, 2, 4)), std::invalid_argument);
+
 }
 TEST(PCB, Connect)
 {
@@ -130,31 +123,19 @@ TEST(PCB, ConnectError)
 	EXPECT_EQ(trass[0].connected_num, 1);
 	EXPECT_EQ(trass[1].connected_num, 0);
 	delete[] trass;
-	/*PCB pcb = PCB(2, 0);
-	try { pcb.connect(1, 2); }
-	catch (std::invalid_argument& err) {
-		std::cout << err.what();
-		EXPECT_EQ(err.what(), std::string("Incorrect connection! \n"));
-	}
-	pcb = PCB(2, 21);
-	try { pcb.connect(1, 2); }
-	catch (std::invalid_argument& err) {
-		std::cout << err.what();
-		EXPECT_EQ(err.what(), std::string("Incorrect connection! \n"));
-	}*/
 }
 TEST(PCB, Length)
 {
 	PCB pcb;
-	pcb.create_contact(0, 2, 1);
-	pcb.create_contact(0, 23, 12);
+	pcb.add_contact(0, 2, 1);
+	pcb.add_contact(0, 23, 12);
 	EXPECT_EQ(pcb.length(1,2) , 24);
 }
 TEST(PCB, LengthError)
 {
 	PCB pcb;
-	pcb.create_contact(0, 2, 1);
-	pcb.create_contact(0, 23, 12);
+	pcb.add_contact(0, 2, 1);
+	pcb.add_contact(0, 23, 12);
 	EXPECT_THROW(pcb.length(1, 5), std::logic_error);
 }
 int main(int argc, char* argv[])

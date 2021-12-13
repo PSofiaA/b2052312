@@ -3,25 +3,37 @@
 
 namespace TowerDefence
 {
+	enum EffectType
+	{
+		Weakening,
+		Poisoning,
+		Deceleration
+	};
 	class Effect
 	{
-	private:
+	protected:
+		EffectType type;
+		int power;
 		int duration;
 		int max_duration;
-	public: //number of effects by size of cont
-		Effect(int d, int md) 
-		{
-			duration = d;
-			max_duration = md;
-		};
+	public:
+		Effect(EffectType t, int p, int dur, int maxd) : type(t), power(p), duration(dur), max_duration(maxd) {};
+		~Effect() {};
 
-		int get_duration() const { return duration; };
-		int get_max_duration() const { return max_duration;  };
+		EffectType get_type() const noexcept { return type; };
+		int get_power() const noexcept { return power; };
+		int get_duration() const noexcept { return duration; };
+		int get_max_duration() const noexcept { return max_duration;  };
 
-		void set_duration(int d) { duration = d; };
-		void set_max_duration(int md) { max_duration = md; };
+		void set_type(EffectType t) { type = t; };
+		void set_power(int p)
+		{ if (p <= 0) throw std::invalid_argument("Incorrect power!"); power = p; };
+		void set_duration(int d)
+		{ if (d > max_duration || d<0) throw std::invalid_argument("Incorrect duration"); duration = d; };
+		void set_max_duration(int md)
+		{ if (md <= 0) throw std::invalid_argument("Incorrect max duration!") max_duration = md; };
 
-		virtual void apply(Enemy& target) = 0;
+		virtual void invoke(Enemy& target) = 0;
 	};
 	
 }

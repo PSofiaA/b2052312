@@ -3,15 +3,15 @@
 #include "Effect.h"
 namespace TowerDefence
 {
-	class Construction
+	class Construction: public Object
 	{
 	private:
 		int radius;
 		int price;
 		int lvl;
-		Effect* effect;
 		TERRAIN type;
 	public:
+		Construction(int rad, int pr, int l, TERRAIN t) : radius(rad), price(pr), lvl(l), type(t) {};
 		int get_radius() { return radius; };
 		int get_price() { return price; };
 		int get_lvl() { return lvl; };
@@ -20,7 +20,8 @@ namespace TowerDefence
 		void set_price(int p) { price = p; };
 		void set_lvl(int l) { lvl = l; };
 
-		virtual void attack(Enemy &target) =0;
+		virtual void attack(Enemy &target) = 0;
+		virtual ~Construction() {};
 	};
 };
 	

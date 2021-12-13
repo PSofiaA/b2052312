@@ -4,10 +4,10 @@ namespace TowerDefence
 {
 	class Magic
 	{
-	private:
+	protected:
 		Effect* effect;
 	public:
 		void set_effect(Effect* e) { effect = e; };
-		virtual void apply_effect(Effect& ef) = 0;
+		virtual void apply_effect(Effect&) = 0;
 	};
 }

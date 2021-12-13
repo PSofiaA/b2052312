@@ -5,14 +5,11 @@ namespace TowerDefence
 {
 	class Tower : public Construction
 	{
-	private:
+	protected:
 		int damage;
 		int rate_of_fire;
 		Strategy* strategy;
-	public: 
-		void attack(Enemy& target) override
-		{
-			target.take_damage(damage);
-		}
+	public:
+		void attack(Enemy& target) override;
 	};
 }
