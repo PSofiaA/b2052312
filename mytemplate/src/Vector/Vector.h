@@ -7,56 +7,9 @@ private:
 	int max_size;
 
 public:
-	//C O N S T R U C T O R S
 	VectorT();
 	VectorT(int);
 	~VectorT();
-	/*int current_size()
-	{
-		return size;
-	}
-	int max_size()
-	{
-		return max_size;
-	}
-	void display()
-	{
-		for (int i = 0; i < size; i++)
-		{
-			cout << array[i] << " ";
-		}
-		cout << endl;
-	}
-	void pushback(T element)
-	{
-		if (size == max_size)
-		{
-			T* buffer = new T[max_size + 1];
-			for (int i = 0; i < max_size; i++)
-			{
-				buffer[i] = array[i];
-			}
-			delete[] array;
-			max_size = max_size + 1;
-			array = buffer;
-			delete[] buffer;
-		}
-		array[size] = element;
-		size++;
-	}
-	void indexpush(T element, int index)
-	{
-		if (index != max_size)
-			array[index] = element;
-		else
-			pushback(element);
-	}
-	T extract(int index)
-	{
-		if (index < size)
-			return array[index];
-	}*/
-	
 	//C A P A S I T Y
 	bool isempty() const;
 	int size() const;
@@ -78,15 +31,90 @@ public:
 	T* data();
 
 	//I T E R A T O R S
-	class IteratorT;
-	IteratorT begin();
-	const IteratorT begin();
-	IteratorT end();
-	const IteratorT end();
+	friend class IteratorT<T>;
+	friend class ConstIteratorT<T>;
+	IteratorT begin() const
+	{
+		return IteratorT(array);
+	}
+	ConstIteratorT cbegin()
+	{
+		return IteratorT(array);
+	}
 
+	IteratorT end() const
+	{
+		return ConstIteratorT(size+array);
+	}
+	ConstIteratorT cend()
+	{
+		return ConstIteratorT(size + array);
+	}
 };
 
+//I T E R A T O R S
+template<class T> class IteratorT
+{
+private:
+	T* current;
+public:
+	IteratorT() : current(0) {};
+	IteratorT(T* t) : current(t) {};
+		
+	T& operator*() const
+	{
+		return *current;
+	}
+	bool operator ==(const IteratorT& check) const
+	{
+		return *current == *check.current;
+	}
+	bool operator !=(const IteratorT& check) const
+	{
+		return *current != *check.current;
+	}
+	IteratorT& operator++()
+	{
+		current++;
+		return *this;
+	}
+	IteratorT& operator--()
+	{
+		--current;
+		return *this;
+	}
+};
 
+template<class T> class ConstIteratorT
+{
+private:
+	const T* current;
+public:
+	ConstIteratorT() : current(0) {};
+	ConstIteratorT(T* t) : current(t) {}
+	T& operator*()
+	{
+		return *current;
+	}
+	bool operator ==(const ConstIteratorT& check) const
+	{
+		return *current == *check.current;
+	}
+	bool operator !=(const ConstIteratorT& check) const
+	{
+		return *current != *check.current;
+	}
+	ConstIteratorT& operator++()
+	{
+		current++;
+		return *this;
+	}
+	ConstIteratorT& operator--()
+	{
+		--current;
+		return *this;
+	}
+};
 //C O N S T R U C T O R S
 template<class T> VectorT<T>::VectorT() :
 	size(0), max_size(1), array(newT[max_size]) {};
@@ -98,7 +126,6 @@ template<class T> VectorT<T>::~VectorT()
 {
 	delete[] array;
 }
-
 
 //M O D I F I E R S
 template<class T> void VectorT<T>::clear()
@@ -173,28 +200,3 @@ template<class T> T* VectorT<T>::data()
 	return array;
 }
 
-//I T E R A T O R S
-template<class T> class VectorT<T>::IteratorT
-{
-private:
-	T* current;
-public:
-	IteratorT(T* t) : current(t) {}
-	T& operator*()
-	{
-		return *current;
-	}
-	bool operator ==(IteratorT& check) const
-	{
-		return *current == *check.current;
-	}
-	bool operator !=(IteratorT& check) const
-	{
-		return *current != *check.current;
-	}
-	IteratorT& operator++()
-	{
-		current++;
-		return *this;
-	}
-};
