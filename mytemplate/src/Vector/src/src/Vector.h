@@ -1,27 +1,37 @@
 #pragma once
-template<class T> class VectorT 
+#include <initializer_list>
+template<class T> class IteratorT;
+template<class T> class ConstIteratorT;
+
+template<class T> class VectorT
 {
 private:
-	T* array;
 	int size;
 	int max_size;
+	T* array;
 
 public:
 	VectorT();
 	VectorT(int);
+	VectorT(std::initializer_list<T> list);
 	~VectorT();
-	//C A P A S I T Y
-	bool isempty() const;
-	int size() const;
-	int max_size() const;
+	
+	//O P E R A T O R S
+	//T& operator= (const T&); 
+	bool operator==(const VectorT<T>&);
+	bool operator!=(const VectorT<T>&);
+
+	//C A P A C I T Y
+	bool empty() const;
+	int ñsize() const;
+	int maxsize() const;
 	int capacity() const;
 	void reserve(int);
 
 	//M O D I F I E R S
 	void clear();
-	void pushback(T&);
+	void pushback(const T&);
 	//void popback();
-	//void resize(int);
 
 	// E L E M E N T   A C C E S S 
 	T& at(int);
@@ -33,22 +43,24 @@ public:
 	//I T E R A T O R S
 	friend class IteratorT<T>;
 	friend class ConstIteratorT<T>;
-	IteratorT begin() const
-	{
-		return IteratorT(array);
-	}
-	ConstIteratorT cbegin()
-	{
-		return IteratorT(array);
-	}
 
-	IteratorT end() const
+	typedef IteratorT<T> Iterator;
+	Iterator begin() const
 	{
-		return ConstIteratorT(size+array);
+		return Iterator(array);
 	}
-	ConstIteratorT cend()
+	Iterator end() const
 	{
-		return ConstIteratorT(size + array);
+		return Iterator(size + array);
+	}
+	typedef ConstIteratorT<T> ConstIterator;
+	ConstIterator cbegin()
+	{
+		return ConstIterator(array);
+	}
+	ConstIterator cend()
+	{
+		return ConstIterator(size + array);
 	}
 };
 
@@ -60,7 +72,7 @@ private:
 public:
 	IteratorT() : current(0) {};
 	IteratorT(T* t) : current(t) {};
-		
+
 	T& operator*() const
 	{
 		return *current;
@@ -75,7 +87,7 @@ public:
 	}
 	IteratorT& operator++()
 	{
-		current++;
+		++current;
 		return *this;
 	}
 	IteratorT& operator--()
@@ -92,7 +104,7 @@ private:
 public:
 	ConstIteratorT() : current(0) {};
 	ConstIteratorT(T* t) : current(t) {}
-	T& operator*()
+	const T& operator*()
 	{
 		return *current;
 	}
@@ -106,7 +118,7 @@ public:
 	}
 	ConstIteratorT& operator++()
 	{
-		current++;
+		++current;
 		return *this;
 	}
 	ConstIteratorT& operator--()
@@ -115,17 +127,49 @@ public:
 		return *this;
 	}
 };
+
+//O P E R A T O R S
+	template<class T> bool VectorT<T>::operator==(const VectorT<T>& that)
+{
+	for (int i = 0; i < this->max_size; i++)
+	{
+		if (array[i] != that.array[i])
+			return false;
+	}
+}
+template<class T> bool VectorT<T>::operator!=(const VectorT<T>& that)
+{
+	for (int i = 0; i < this->max_size; i++)
+	{
+		if (array[i] != that.array[i])
+			return true;
+	}
+}
+
 //C O N S T R U C T O R S
 template<class T> VectorT<T>::VectorT() :
-	size(0), max_size(1), array(newT[max_size]) {};
+	max_size(1), size(0), array(new T[max_size]) {};
 
 template<class T> VectorT<T>::VectorT(int msize) :
-	size(0), max_size(msize), array(newT[max_size]) {};
+	max_size(msize), size(0), array(new T[max_size]) {};
 
 template<class T> VectorT<T>::~VectorT()
 {
 	delete[] array;
 }
+
+template<class T> VectorT<T>::VectorT(std::initializer_list<T> list) :
+	size(list.size()),
+	max_size(this->size + 5),
+	array(new T[max_size])
+{
+	int i = 0;
+	for (auto value : list)
+	{
+		array[i] = value;
+		i++;
+	}
+};
 
 //M O D I F I E R S
 template<class T> void VectorT<T>::clear()
@@ -134,17 +178,25 @@ template<class T> void VectorT<T>::clear()
 	size = 0;
 	array = new T[max_size];
 }
-template<class T> void VectorT<T>::pushback(T& t)
+template<class T> void VectorT<T>::pushback(const T& t)
 {
 	if (size == max_size)
-		resize();
+	{
+		T* buffer = new T[this->max_size + 5];
+		for (int i = 0; i < size; i++)
+		{
+			buffer[i] = array[i];
+		}
+		delete[] array;
+		array = buffer;
+	}
 	size++;
 	array[size] = t;
 }
 
 
 //C A P A S I T Y
-template<class T> bool VectorT<T>::isempty() const
+template<class T> bool VectorT<T>::empty() const
 {
 	return (size == 0);
 }
@@ -152,11 +204,11 @@ template<class T> int VectorT<T>::capacity() const
 {
 	return (max_size - size);
 }
-template<class T> int VectorT<T>::max_size() const
+template<class T> int VectorT<T>::maxsize() const
 {
 	return (max_size);
 }
-template<class T> int VectorT<T>::size() const
+template<class T> int VectorT<T>::ñsize() const
 {
 	return (size);
 }
@@ -172,7 +224,6 @@ template<class T> void VectorT<T>::reserve(int s)
 		delete[] array;
 		array = buffer;
 		max_size = s;
-		delete[] buffer;
 	}
 }
 

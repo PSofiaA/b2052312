@@ -6,7 +6,7 @@ namespace TowerDefence
 		Dead,
 		Alive
 	};
-	class StatefulObject
+	class StatefulObject: public Object
 	{
 	protected:
 		int ID;
@@ -16,7 +16,8 @@ namespace TowerDefence
 		ObjectState state;
 
 	public:
-		StatefulObject(int id, int hp, int mhp, int g, ObjectState s) : ID(id), HP(hp), max_HP(mhp), gold(g), state(s) {};
+		StatefulObject(int id, int hp, int mhp, int g, ObjectState s, TERRAIN T, int X, int Y) :
+			Object(X,Y,T), ID(id), HP(hp), max_HP(mhp), gold(g), state(s) {};
 		~StatefulObject() {};
 		ObjectState get_state() const { return state; }
 		int get_HP() const { return HP; }
@@ -32,7 +33,6 @@ namespace TowerDefence
 		{
 			(HP < 0) ? state = Dead : state = Alive;
 		}
-
 		virtual void take_damage(int damage)
 		{
 			if (state != Dead)

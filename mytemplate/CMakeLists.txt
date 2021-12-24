@@ -5,3 +5,4 @@ set(PROJECT_NAME Vector)
 project(${PROJECT_NAME})
 
 add_subdirectory(src/Vector)
+add_subdirectory(src/Tests)

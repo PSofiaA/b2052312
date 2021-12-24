@@ -15,4 +15,12 @@ namespace TowerDefence
 	{
 		this->acting_effects.push_back(effect);
 	}
+	void Enemy::take_damage(int damg)
+	{
+		if (this->scale_damage != 0)
+		{
+			damg = damg + (damg * this->scale_damage) / 100;
+		}
+
+	}
 }

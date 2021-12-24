@@ -7,24 +7,24 @@ namespace TowerDefence
 	class Enemy : public StatefulObject
 	{
 	private:
-		float scale_damage;
+		int scale_damage;
 		int speed;
-		TERRAIN type;
 		vector<Effect*> acting_effects;
 	public:
-		Enemy(int id, int hp, int mhp, int g, ObjectState state, float sd, int sp, TERRAIN t) :
-			StatefulObject(id, hp, mhp, g, state), scale_damage(sd), speed(sp), type(t) {};
+		Enemy(int id, int hp, int maxhp, int g, ObjectState state, int sp, int X, int Y) :
+			StatefulObject(id, hp, maxhp, g, state, ROAD, X, Y), scale_damage(0), speed(sp), type(t) {};
 		
 		vector<Effect*>* get_effects() const noexcept
 			{   if (acting_effects.size()) return &acting_effects;
 				else return nullptr};
-		float get_scale_damage() const { return scale_damage; }
+		int get_scale_damage() const { return scale_damage; }
 		int get_speed() const { return speed; }
 	
-		void set_scale_damage(float d) { scale_damage = d; }	
+		void set_scale_damage(int d) { scale_damage = d; }
 		void set_speed(int s) { speed = s; }
 	
 		void update();
 		void take_effect(Effect&);
+		void take_damage(int) override;
 	};
 }

@@ -9,9 +9,8 @@ namespace TowerDefence
 		int radius;
 		int price;
 		int lvl;
-		TERRAIN type;
 	public:
-		Construction(int rad, int pr, int l, TERRAIN t) : radius(rad), price(pr), lvl(l), type(t) {};
+		Construction(int rad, int pr, int l, TERRAIN t, int x, int y) : Object(x,y,t), radius(rad), price(pr), lvl(l), type(t) {};
 		int get_radius() { return radius; };
 		int get_price() { return price; };
 		int get_lvl() { return lvl; };

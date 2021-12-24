@@ -41,22 +41,4 @@ namespace Tower_Defence
 	{
 		std::cout << "LOSER" << std::endl;
 	}
-	int create_tower(Level& level) {
-		try {
-			int cost;
-			cost = level.cost_new_tower(); // thrown out only if there is not enough money
-
-			std::cout << "Input coordinates, where to build a new tower" << std::endl;
-			int i, j;
-			if (!getNum(i, "") || !getNum(j, "")) return 0;
-
-			level.build_tower(i, j);  // thrown if blocking the path for infantry or this cell is not a plain
-			return 1;
-		}
-		catch (std::exception& ex) {
-			std::cout << ex.what() << std::endl;
-			click_enter();
-			return 1;
-		}
-	}
 }

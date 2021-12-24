@@ -1,8 +1,8 @@
 #pragma once
 #include "Enemy.h"
 #include "Lair.h"
-#include "castle.h"
-#include <list>
+#include "Castle.h"
+#include "Tile.h"
 using std::vector;
 
 namespace TowerDefence
@@ -12,7 +12,7 @@ namespace TowerDefence
 	private:
 		int moves;
 		int width, height;
-
+		vector<vector<Tile*>> tiles;
 	public:
 		int get_moves() { return moves; };
 		int get_width() { return width; };
