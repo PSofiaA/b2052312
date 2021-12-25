@@ -1,10 +1,9 @@
 #pragma once
-#include "Enemy.h"
 
-namespace TowerDefence
+/*namespace TowerDefence
 {
 	class Liar: public Object
 	{
 
 	};
-}
+}*/

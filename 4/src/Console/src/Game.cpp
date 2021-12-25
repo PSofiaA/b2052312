@@ -27,6 +27,7 @@ namespace Tower_Defence
 		} while (input < 0 || input > NMsgs);
 		return input;
 	}
+
 	void enter() 
 	{
 		std::cout << "Enter to continue" << std::endl;

@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Construction.h"
-#include "Castle.h"
-#include "Level.h"
-#include "Lair.h"
+#include <Construction.h>
+#include <Castle.h>
+#include <Level.h>
+#include <Lair.h>
 
 using std::string;
 using std::vector;
@@ -38,7 +38,6 @@ namespace TowerDefence
 
 	void enter(); //EXPERIMENTAL!!
 	int main_menu(Level&);
-	bool general_question();
 	void game_over();
 	void game_win();
 	int exit(Level&);

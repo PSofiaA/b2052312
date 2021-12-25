@@ -8,6 +8,4 @@ namespace TowerDefence
 	public:
 		MagicTower();
 		void attack(Enemy& target) override;
-		void apply_effect(Enemy& target) override;
-	};
 }

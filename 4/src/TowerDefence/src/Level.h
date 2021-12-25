@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy.h"
-#include "Lair.h"
+//#include "Lair.h"
 #include "Castle.h"
 #include "Tile.h"
 using std::vector;

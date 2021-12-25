@@ -1,4 +1,5 @@
 #pragma once
+#include  <stdexcept>
 #include "Enemy.h"
 
 namespace TowerDefence
@@ -31,7 +32,9 @@ namespace TowerDefence
 		void set_duration(int d)
 		{ if (d > max_duration || d<0) throw std::invalid_argument("Incorrect duration"); duration = d; };
 		void set_max_duration(int md)
-		{ if (md <= 0) throw std::invalid_argument("Incorrect max duration!") max_duration = md; };
+		{
+			if (md <= 0) throw std::invalid_argument("Incorrect max duration!"); max_duration = md;
+		};
 
 		virtual void invoke(Enemy& target) = 0;
 	};

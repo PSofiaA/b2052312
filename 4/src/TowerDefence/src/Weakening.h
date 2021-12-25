@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Effect.h"
 #pragma once
 namespace TowerDefence
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "StatefulObject.h"
 using std::vector;
 
 namespace TowerDefence

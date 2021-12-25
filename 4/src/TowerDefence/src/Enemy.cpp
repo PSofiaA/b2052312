@@ -21,6 +21,6 @@ namespace TowerDefence
 		{
 			damg = damg + (damg * this->scale_damage) / 100;
 		}
-
+		//
 	}
 }

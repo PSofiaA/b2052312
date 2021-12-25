@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "Effect.h"
+#include "Object.h"
 namespace TowerDefence
 {
 	class Construction: public Object

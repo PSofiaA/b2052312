@@ -31,7 +31,7 @@ namespace TowerDefence
 		
 		void update_state()
 		{
-			(HP < 0) ? state = Dead : state = Alive;
+			(HP <= 0) ? state = Dead : state = Alive;
 		}
 		virtual void take_damage(int damage)
 		{
