@@ -1,13 +1,14 @@
 #pragma once
 #include <initializer_list>
+#define CNST 5
 template<class T> class IteratorT;
 template<class T> class ConstIteratorT;
 
 template<class T> class VectorT
 {
 private:
-	int size;
-	int max_size;
+	int _size;
+	int _capacity;
 	T* array;
 
 public:
@@ -17,14 +18,12 @@ public:
 	~VectorT();
 	
 	//O P E R A T O R S
-	//T& operator= (const T&); 
 	bool operator==(const VectorT<T>&);
 	bool operator!=(const VectorT<T>&);
 
 	//C A P A C I T Y
 	bool empty() const;
-	int ñsize() const;
-	int maxsize() const;
+	int size() const;
 	int capacity() const;
 	void reserve(int);
 
@@ -51,7 +50,7 @@ public:
 	}
 	Iterator end() const
 	{
-		return Iterator(size + array);
+		return Iterator(_size + array);
 	}
 	typedef ConstIteratorT<T> ConstIterator;
 	ConstIterator cbegin()
@@ -60,7 +59,7 @@ public:
 	}
 	ConstIterator cend()
 	{
-		return ConstIterator(size + array);
+		return ConstIterator(_size + array);
 	}
 };
 
@@ -131,7 +130,7 @@ public:
 //O P E R A T O R S
 	template<class T> bool VectorT<T>::operator==(const VectorT<T>& that)
 {
-	for (int i = 0; i < this->max_size; i++)
+	for (int i = 0; i < this->_capacity; i++)
 	{
 		if (array[i] != that.array[i])
 			return false;
@@ -139,7 +138,7 @@ public:
 }
 template<class T> bool VectorT<T>::operator!=(const VectorT<T>& that)
 {
-	for (int i = 0; i < this->max_size; i++)
+	for (int i = 0; i < this->_capacity; i++)
 	{
 		if (array[i] != that.array[i])
 			return true;
@@ -148,10 +147,10 @@ template<class T> bool VectorT<T>::operator!=(const VectorT<T>& that)
 
 //C O N S T R U C T O R S
 template<class T> VectorT<T>::VectorT() :
-	max_size(1), size(0), array(new T[max_size]) {};
+	_capacity(0), _size(0), array(nullptr) {};
 
 template<class T> VectorT<T>::VectorT(int msize) :
-	max_size(msize), size(0), array(new T[max_size]) {};
+	_capacity(msize), _size(0), array(new T[_capacity]) {};
 
 template<class T> VectorT<T>::~VectorT()
 {
@@ -159,9 +158,9 @@ template<class T> VectorT<T>::~VectorT()
 }
 
 template<class T> VectorT<T>::VectorT(std::initializer_list<T> list) :
-	size(list.size()),
-	max_size(this->size + 5),
-	array(new T[max_size])
+	_size(list.size()),
+	_capacity(this->_size + CNST),
+	array(new T[_capacity])
 {
 	int i = 0;
 	for (auto value : list)
@@ -175,62 +174,63 @@ template<class T> VectorT<T>::VectorT(std::initializer_list<T> list) :
 template<class T> void VectorT<T>::clear()
 {
 	delete[] array;
-	size = 0;
-	array = new T[max_size];
+	_size = 0;
+	array = new T[_capacity];
 }
 template<class T> void VectorT<T>::pushback(const T& t)
 {
-	if (size == max_size)
+	if (_size == _capacity && _capacity != 0 )
 	{
-		T* buffer = new T[this->max_size + 5];
-		for (int i = 0; i < size; i++)
+		T* buffer = new T[this->_capacity + CNST];
+		for (int i = 0; i < _size; i++)
 		{
 			buffer[i] = array[i];
 		}
 		delete[] array;
 		array = buffer;
 	}
-	size++;
-	array[size] = t;
+	if (_capacity == 0)
+	{
+		this->_capacity = CNST;
+		this->array = new T[CNST];
+	}
+	_size++;
+	array[_size] = t;
 }
 
 
 //C A P A S I T Y
 template<class T> bool VectorT<T>::empty() const
 {
-	return (size == 0);
+	return (_size == 0);
 }
 template<class T> int VectorT<T>::capacity() const
 {
-	return (max_size - size);
+	return (_capacity);
 }
-template<class T> int VectorT<T>::maxsize() const
+template<class T> int VectorT<T>::	size() const
 {
-	return (max_size);
-}
-template<class T> int VectorT<T>::ñsize() const
-{
-	return (size);
+	return (_size);
 }
 template<class T> void VectorT<T>::reserve(int s)
 {
-	if (s > max_size)
+	if (s > _capacity)
 	{
 		T* buffer = new T[s];
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < _size; i++)
 		{
 			buffer[i] = array[i];
 		}
 		delete[] array;
 		array = buffer;
-		max_size = s;
+		_capacity	 = s;
 	}
 }
 
 // E L E M E N T   A C C E S S 
 template<class T> T& VectorT<T>::at(int index)
 {
-	if (index >= size)
+	if (index >= _size)
 		throw std::logic_error("Incorrect index!");
 	return array[index];
 }
@@ -244,7 +244,7 @@ template<class T> T& VectorT<T>::front()
 }
 template<class T> T& VectorT<T>::back()
 {
-	return array[size - 1];
+	return array[_size - 1];
 }
 template<class T> T* VectorT<T>::data()
 {
