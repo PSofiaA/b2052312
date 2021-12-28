@@ -1,27 +1,24 @@
-#include "Castle.h"
-#include "Tile.h"
+#pragma once
 #include "Object.h"
 namespace TowerDefence
 {
-	enum TERRAIN {
-		ROAD, FIELD, FOREST
-	};
 	class Tile
 	{
 	private:
 		Object* object;
 		TERRAIN type;
-		int size;
-		int coordinate;		
 	public:
-		int get_size() { return size; };
-		int get_coordinate() { return coordinate; };
+		~Tile();
+		Tile(TERRAIN t) : object(nullptr), type(t) {};
+		Tile(Object* ob, TERRAIN t) : object(ob), type(t) {};
 		TERRAIN get_terrain() { return type; };
+		Object* get_object() { return object; };
 
 		void set_terrain(TERRAIN t) {type = t;};
-		void set_coordinate(int c) { coordinate = c; };
-		void set_size(int s) { size = s; };
 		void set_object(Object*);
-		Tile(TERRAIN type, int size);
+		
+		void remove_object();
+		bool check_object(Object*);
+	
 	};
 }

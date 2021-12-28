@@ -1,22 +1,33 @@
 #pragma once
 namespace TowerDefence
 {
-	struct Position
-	{
-		int x;
-		int y;
+	enum TERRAIN {
+		ROAD, FIELD, FOREST, NOTSTATED
+	};
+	enum TYPE {
+		TOWER, MAGICTOWER,TRAP, ENEMY, CASTLE
 	};
 	class Object
 	{
 	private:
+		TYPE objectType;
 		TERRAIN availableTerrain;
-		Position position;
+		int x;
+		int y;
+		int gold;
 	public:
-		Object(int x, int y, TERRAIN terrain) : this->position.x = x, this->position.y = y, this->availableTerrain = terrain {};
+		Object(int px, int py, TERRAIN terrain, TYPE type, int money) : x(px), y(py), availableTerrain(terrain), objectType(type), gold(money) {};
 
-		TERRAIN get_terrain() { return terrain; }
-		Position get_position() { return position; }
-		void set_position(int px, int py) { this->position.x = px; this->position.y = py; }
-		void set_terrain(TERRAIN T) { this->terrain = T; }
+		int get_gold() { return gold; }
+		TERRAIN get_terrain() { return availableTerrain; }
+		TYPE get_type() { return objectType; }
+		int get_x() { return x; }
+		int get_y() { return y; }
+
+		void set_gold(int g) { this->gold = g; }
+		void set_position(int px, int py) { this->x = px; this->y = py; }
+		void set_terrain(TERRAIN T) { this->availableTerrain = T; }
+
+		//virtual int get_info() = 0;
 	};
 }

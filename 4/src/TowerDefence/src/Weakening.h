@@ -1,12 +1,11 @@
-#include "Enemy.h"
-#include "Effect.h"
 #pragma once
+#include "Effect.h"
 namespace TowerDefence
 {
 	class Weakening : public Effect
 	{
 	public:
-		Weakening(EffectType t, int p, int dur, int maxd) : Effect(t, p, dur, maxd) {};
-		void invoke(Enemy& target) override;
+		Weakening() : Effect(weakening, 3, 3, 3) {};
+		 void invoke(Enemy& target) override;
 	};
 }

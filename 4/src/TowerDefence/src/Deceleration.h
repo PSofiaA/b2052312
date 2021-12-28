@@ -5,7 +5,7 @@ namespace TowerDefence
 	class Deceleration : public Effect
 	{
 	public:
-		Deceleration(EffectType t, int p, int dur, int maxd) : Effect(t, p, dur, maxd) {};
+		Deceleration() : Effect(deceleration, 5, 5, 5) {};
 		void invoke(Enemy& target) override;
 	};
 }

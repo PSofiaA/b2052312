@@ -1,16 +1,29 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <Construction.h>
+#include <Deceleration.h>
+#include <Poisoning.h>
+#include <Weakening.h>
+#include <Trap.h>
 #include <Castle.h>
 #include <Level.h>
-#include <Lair.h>
+#include <Tower.h>
+#include <MagicTower.h>
+#include <iomanip> 
+#include <iostream>
 
 using std::string;
 using std::vector;
 
 namespace TowerDefence
 {
+	/*class Game {
+	private:
+		int timer;
+		Level* level;
+	public:
+		Game() : timer(0) {level = new Level};
+	};*/
 	template <typename Type>
 	int get(Type& x, const char* message)
 	{
@@ -30,16 +43,15 @@ namespace TowerDefence
 				return 0;
 		}
 	}
-	typedef int (*function_ptr)(Level&); //idea from 3rd lab to work with function pointer
-	int make_move(Level&);
+	typedef int (*function_ptr)(Level& level);//idea from 3rd lab to work with function pointer
 	int create_tower(Level&);
-	int update_castle(Level&);
-	int update_tower(Level&);
+	int create_trap(Level&);
+	int draw_level(Level&);
+	//int spawn_enemy(Level&);
 
 	void enter(); //EXPERIMENTAL!!
-	int main_menu(Level&);
+	int main_menu();
 	void game_over();
 	void game_win();
-	int exit(Level&);
 //std::vector<Enemy*>  enemies;
 }

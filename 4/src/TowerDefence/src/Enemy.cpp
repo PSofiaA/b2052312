@@ -1,10 +1,11 @@
 #include "Enemy.h"
-
+#include "Effect.h"
+#include <math.h>
 namespace TowerDefence
 {
 	void Enemy::update()
 	{
-		for (auto effect : acting_effects)
+		for (auto &effect : acting_effects)
 		{
 			effect->invoke(*this);
 			if (effect->get_duration() == 0)
@@ -13,14 +14,11 @@ namespace TowerDefence
 	}
 	void Enemy::take_effect(Effect& effect)
 	{
-		this->acting_effects.push_back(effect);
+		this->acting_effects.push_back(&effect);
 	}
 	void Enemy::take_damage(int damg)
 	{
-		if (this->scale_damage != 0)
-		{
-			damg = damg + (damg * this->scale_damage) / 100;
-		}
-		//
+		damg += round((static_cast<float>(damg * this->scale_damage)) / 100); 
+		StatefulObject::take_damage(damg);
 	}
 }

@@ -1,9 +1,9 @@
 #include "Weakening.h"
 namespace TowerDefence
 {
-	void Weakening::invoke(Enemy& target) override
+	void Weakening::invoke(Enemy& target)
 	{
-		float percent = get_power();
+		int percent = get_power();
 		target.set_scale_damage(percent);
 	}
 }

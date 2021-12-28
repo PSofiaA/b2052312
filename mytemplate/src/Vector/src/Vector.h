@@ -179,7 +179,7 @@ template<class T> void VectorT<T>::clear()
 }
 template<class T> void VectorT<T>::pushback(const T& t)
 {
-	if (_size == _capacity && _capacity != 0 )
+	if (_size == _capacity)
 	{
 		T* buffer = new T[this->_capacity + CNST];
 		for (int i = 0; i < _size; i++)
@@ -189,11 +189,11 @@ template<class T> void VectorT<T>::pushback(const T& t)
 		delete[] array;
 		array = buffer;
 	}
-	if (_capacity == 0)
+	/*if (_capacity == 0)
 	{
 		this->_capacity = CNST;
 		this->array = new T[CNST];
-	}
+	}*/
 	_size++;
 	array[_size] = t;
 }
